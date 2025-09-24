@@ -1,0 +1,7 @@
+{
+    "operation": "crypto-shred",
+    "target": "./test.txt",
+    "timestamp": "2025-09-23T16:02:12.955319Z",
+    "key_fingerprint": "517d1f7de585bfc6ca8756d3659b4c32216d812b9e10b6b9c4d9458897e224e9",
+    "status": "dry-run"
+}

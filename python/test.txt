@@ -1,0 +1,141 @@
+# 🔐 SecureWipe – Secure Data Wiping for Trustworthy IT Asset Recycling  
+**Smart India Hackathon 2025 – Team NY CodeZ**  
+
+---
+
+## 📌 Problem Statement  
+India generates **1.75M tonnes of e-waste annually**, but much of it is not recycled due to **fear of data breaches**.  
+Enterprises and individuals hoard devices worth **₹50,000+ crore** because existing wiping tools are:  
+- ❌ Complex or expensive  
+- ❌ Don’t provide verifiable proof of deletion  
+- ❌ Lack offline/portable usability  
+
+This creates a **barrier to safe IT asset disposal** and slows down India’s **circular economy**.  
+
+---
+
+## 🎯 Objectives  
+- Develop a **cross-platform wiping tool** (Windows, Linux, Android, Bootable ISO).  
+- Ensure **secure, verifiable, permanent deletion** (aligned with **NIST SP 800-88**).  
+- Generate **tamper-proof certificates** (PDF/JSON) with digital signatures.  
+- Provide a **simple one-click interface** for general users.  
+- Enable **enterprise batch-wiping and compliance reporting**.  
+- Support **third-party verification** (via QR codes, CLI, or optional blockchain).  
+
+---
+
+## 💡 Proposed Solution  
+A **Python/C++ based secure data wiping system** that combines:  
+
+1. **Device Detection & Preparation**  
+   - Auto-detects HDD, SSD, NVMe, Android.  
+   - Unlocks hidden areas (**HPA/DCO**) to ensure complete sanitization.  
+   - Collects device metadata (model, serial, firmware) for certificates.  
+
+2. **Secure Wiping Execution**  
+   - **ATA Secure Erase** (`hdparm`) for HDD/SSDs.  
+   - **NVMe Crypto-Erase** (`nvme-cli`) for NVMe drives.  
+   - **Firmware-level sanitize** for SSDs.  
+   - **Fallback multi-pass overwrites** when firmware erase is unavailable.  
+   - **Android key deletion + factory reset** for mobiles.  
+   - **Verification via random sector readbacks** + integrity hash generation.  
+
+3. **Certificate Generation**  
+   - JSON + PDF certificates with wipe details, logs, and methods.  
+   - **Cryptographic signing** using ECC or PQC (CRYSTALS-Dilithium, Falcon).  
+   - QR code linking to signed JSON/PDF for **offline/online verification**.  
+
+4. **Integration & Usability**  
+   - **One-click UI** for individuals.  
+   - **Batch wipe + compliance mode** for recyclers/enterprises.  
+   - **Bootable ISO/USB** for OS-independent use.  
+
+---
+
+## ✨ Features (Prototype)  
+- **Full SSD/HDD Erasure**  
+  - ATA Secure Erase (via `hdparm`)  
+  - NVMe Crypto-Erase (via `nvme-cli`)  
+  - Auto-detection of device type  
+  - Dry-run simulation for safe demos  
+
+- **File-level Crypto-Shred**  
+  - AES-GCM with one-time key  
+  - Works in chunks for large files  
+  - Securely replaces original data  
+  - Generates **JSON + PDF certificates** with fingerprints  
+
+- **Certificates & Verification**  
+  - Timestamped JSON + PDF reports  
+  - Signed with ECC/PQC  
+  - QR-code enabled for third-party validation  
+
+- **Interactive Mode**  
+  - Safe guided demo menus  
+  - Choose between full disk erase or file crypto-shred  
+
+---
+
+## 🛠️ Tech Stack  
+- **Languages:** Python, C/C++  
+- **Libraries/Tools:**  
+  - `hdparm`, `nvme-cli` for low-level drive commands  
+  - OpenSSL, PyCryptodome for crypto operations  
+  - ReportLab for PDF generation  
+- **Platforms:** Windows, Linux, Android, Bootable ISO  
+- **Optional:** Blockchain/IPFS for decentralized certificate storage  
+
+---
+
+## ⚙️ Requirements  
+- **System Tools**  
+  - `hdparm` (for ATA drives)  
+  - `nvme-cli` (for NVMe drives)  
+- **Python Packages**  
+```bash
+pip install reportlab cryptography
+```
+---
+
+## 🚀 Usage
+1. **Interactive Mode (Safe Demo)**
+```bash
+python secure_wipe.py --interactive --dry-run
+```
+
+2. **Full SSD Erasure**
+
+- NVMe:
+
+```bash
+sudo python secure_wipe.py --device /dev/nvme0n1 --nvme
+```
+
+- ATA:
+
+```bash
+sudo python secure_wipe.py --device /dev/sda
+```
+
+**⚠️ Warning: These operations are destructive — use only on disposable test drives.**
+
+
+3. File-level Crypto-Shred
+
+- Safe demo (no overwrite):
+
+```bash
+python secure_wipe.py --cryptoshred --file /path/to/test.txt --dry-run
+```
+
+- Real irreversible shred:
+
+```bash
+python secure_wipe.py --cryptoshred --file /path/to/test.txt
+```
+
+```bash
+python secure_wipe.py --cryptoshred --file /path/to/test.txt
+```
+
+## 📄 Certificates are stored in the certificates/ directory.
